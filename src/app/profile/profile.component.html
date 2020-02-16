@@ -1,0 +1,97 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Country</th>
+    <th scope="col">Area</th>
+    <th scope="col">Population</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let day of days; index as i">
+    <th scope="row">{{ i + 1 }}</th>
+    <!--<td>
+      <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="mr-2" style="width: 20px">
+      {{ country.name }}
+    </td>-->
+    <td>{{ day.day }}</td>
+    <td>
+      <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="day.Diet">
+        <label ngbButtonLabel class="btn-success">
+          <input ngbButton type="radio" [value]="0"> Veg
+        </label>
+        <label ngbButtonLabel class="btn-danger">
+          <input ngbButton type="radio" [value]="1"> Non Veg
+        </label>
+        <label ngbButtonLabel class="btn-info">
+          <input ngbButton type="radio" [value]="2"> Vegan
+        </label>
+    </div>
+    </td>
+    <td>
+      {{day | json}}
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<p>You can also Choose a period</p>
+
+<div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="dietForPeriod">
+  <label ngbButtonLabel class="btn-success">
+    <input ngbButton type="radio" [value]="0"> Veg
+  </label>
+  <label ngbButtonLabel class="btn-danger">
+    <input ngbButton type="radio" [value]="1"> Non Veg
+  </label>
+  <label ngbButtonLabel class="btn-info">
+    <input ngbButton type="radio" [value]="2"> Vegan
+  </label>
+</div>
+
+<ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden">
+</ngb-datepicker>
+
+<ng-template #t let-date let-focused="focused">
+  <span class="custom-day"
+        [class.focused]="focused"
+        [class.veg-range]="isRange(date) && dietForPeriod === 0"
+        [class.non-veg-range]="isRange(date) && dietForPeriod === 1"
+        [class.vegan-range]="isRange(date) && dietForPeriod === 2"
+        [class.faded]="isHovered(date) || isInside(date)"
+        (mouseenter)="hoveredDate = date"
+        (mouseleave)="hoveredDate = null">
+    {{ date.day }}
+  </span>
+</ng-template>
+<p>
+  <button [disabled]="!fromDate || !toDate" type="button" class="btn btn-primary" (click)="record(dietForPeriod)">Record</button>
+</p>
+<hr>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Country</th>
+    <th scope="col">Area</th>
+    <th scope="col">Population</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let period of periods; index as i">
+    <th scope="row">{{ i + 1 }}</th>
+    <!--<td>
+      <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="mr-2" style="width: 20px">
+      {{ country.name }}
+    </td>-->
+    <td>From: {{ period.from | json }}</td>
+    <td>
+      To: {{ period.to | json }}
+    </td>
+    <td>
+      Diet: {{ period.diet === 0 ? 'Veg': period.diet === 1 ? 'Non veg' : 'Vegan' }}
+    </td>
+  </tr>
+  </tbody>
+</table>
